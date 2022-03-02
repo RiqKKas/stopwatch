@@ -1,6 +1,20 @@
+function resizeWindow() {
+    const mainContainer = document.querySelector('.container');
+    const body = document.querySelector('body');
+
+    if (body.clientHeight < mainContainer.clientHeight) {
+        body.style.display = 'block';
+    } else if (body.clientHeight > mainContainer.clientHeight) {
+        body.style.display = 'flex';
+    }
+}
+
+window.addEventListener('resize', resizeWindow);
+
 class Timer {
-    constructor(clockSelector, startButtonSelector, pauseButtonSelector, resetButtonSelector) {
-        this.clock = document.querySelector(clockSelector,);
+    constructor(clockSelector, resultSelector, startButtonSelector, pauseButtonSelector, resetButtonSelector) {
+        this.clock = document.querySelector(clockSelector);
+        this.result = document.querySelector(resultSelector);
         this.startButton = document.querySelector(startButtonSelector,);
         this.pauseButton = document.querySelector(pauseButtonSelector);
         this.resetButton = document.querySelector(resetButtonSelector);
@@ -9,6 +23,8 @@ class Timer {
     }
 
     startTimer() {
+        this.result.innerHTML = '';
+
         if (!this.running) {
             this.timerMotor = setInterval(() => {
                 const time = this.clock.innerHTML.split(':');
@@ -29,6 +45,7 @@ class Timer {
 
             this.startButton.disabled = true;
             this.pauseButton.disabled = false;
+            this.resetButton.disabled = false;
             this.running = true;
         }
     }
@@ -42,6 +59,8 @@ class Timer {
 
     resetTimer() {
         this.pauseTimer();
+        this.resetButton.disabled = true;
+        this.result.innerHTML = `Tempo Gasto: ${this.clock.innerHTML}`;
         this.clock.innerHTML = this.formatTime([]);
     }
 
@@ -54,7 +73,7 @@ class Timer {
     }
 }
 
-const timer = new Timer('#clock', '#startButton', '#pauseButton', '#resetButton');
+const timer = new Timer('#clock','#time-spent', '#startButton', '#pauseButton', '#resetButton');
 
 timer.startButton.addEventListener('click', timer.startTimer.bind(timer));
 timer.pauseButton.addEventListener('click', timer.pauseTimer.bind(timer));
